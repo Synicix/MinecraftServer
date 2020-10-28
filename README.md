@@ -8,3 +8,5 @@
 
 ### NOTES:
 Yes, you can bypass the persistent volume stuff by just adding hostpath directly into the deployment.yaml, but I wanted mess around with it to see how it worked.
+
+Also yes, you can just use the docker image and run ```docker run -p 25565:25565 synicix/minecraft-server:latest``` to run it, however note that you need to save the world folder somehow. Either use commands or docker-compose
