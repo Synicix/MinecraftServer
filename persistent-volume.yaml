@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: minecraft-server-world-data
+  name: minecraft-server-data
   labels:
     type: local
 spec:
-  storageClassName: minecraft-world-data
+  storageClassName: minecraft-server-data
   capacity:
     storage: 20Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: "/mnt/minecraft-server-world-data"
+    path: "/mnt/minecraft-server-data"

@@ -15,18 +15,22 @@ spec:
         app: minecraft-server
     spec:
       volumes:
-      - name: minecraft-world-data
+      - name: minecraft-server-data
         persistentVolumeClaim:
-          claimName: minecraft-world-data
+          claimName: minecraft-server-data
       containers:
       - name: minecraft-server
-        image: synicix/minecraft-server
+        image: openjdk:18-slim-buster
         volumeMounts:
-        - mountPath: "/src/world"
-          name: minecraft-world-data
+        - mountPath: "/src"
+          name: minecraft-server-data
         ports:
         - containerPort: 25565
-        
+        stdin: true
+        tty: true
+        workingDir: /src
+        command: ["java"]
+        args: ["-Xmx14G", "-Xms14G", "-jar", "server.jar", "nogui"]
 ---
 
 apiVersion: v1
@@ -34,13 +38,10 @@ kind: Service
 metadata:
   name: minecraft-server
 spec:
-  type: NodePort
+  type: LoadBalancer
   selector:
     app: minecraft-server
   ports:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
     - port: 25565
       targetPort: 25565
-      # Optional field
-      # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
-      nodePort: 30000
