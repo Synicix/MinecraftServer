@@ -20,7 +20,7 @@ spec:
           claimName: minecraft-server-data
       containers:
       - name: minecraft-server
-        image: openjdk:18-slim-buster
+        image: openjdk:17-slim-buster
         volumeMounts:
         - mountPath: "/src"
           name: minecraft-server-data
@@ -30,7 +30,7 @@ spec:
         tty: true
         workingDir: /src
         command: ["java"]
-        args: ["-Xmx14G", "-Xms14G", "-jar", "server.jar", "nogui"]
+        args: ["-Xms2G", "-Xmx12G", "-XX:+UseG1GC", "-jar", "spigot-1.18.1.jar", "nogui"]
 ---
 
 apiVersion: v1
@@ -45,3 +45,18 @@ spec:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
     - port: 25565
       targetPort: 25565
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minecraft-server-bedrock
+spec:
+  type: LoadBalancer
+  selector:
+    app: minecraft-server
+  ports:
+      # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 19132
+      targetPort: 19132
+      protocol: UDP
