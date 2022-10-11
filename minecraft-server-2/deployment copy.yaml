@@ -1,46 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: minecraft-server
+  name: minecraft-server2
   labels:
-    app: minecraft-server
+    app: minecraft-server2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: minecraft-server
+      app: minecraft-server2
   template:
     metadata:
       labels:
-        app: minecraft-server
+        app: minecraft-server2
     spec:
       volumes:
-      - name: minecraft-server-data
+      - name: minecraft-server-data2
         persistentVolumeClaim:
-          claimName: minecraft-server-data
+          claimName: minecraft-server-data2
       containers:
       - name: minecraft-server
         image: openjdk:17-slim-buster
         volumeMounts:
         - mountPath: "/src"
-          name: minecraft-server-data
+          name: minecraft-server-data2
         ports:
         - containerPort: 25565
         stdin: true
         tty: true
         workingDir: /src
         command: ["java"]
-        args: ["-Xms2G", "-Xmx6G", "-XX:+UseG1GC", "-jar", "server.jar", "nogui"]
+        args: ["-Xms2G", "-Xmx4G", "-XX:+UseG1GC", "-jar", "server.jar", "nogui"]
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: minecraft-server
+  name: minecraft-server2
 spec:
   type: LoadBalancer
   selector:
-    app: minecraft-server
+    app: minecraft-server2
   ports:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
     - port: 25565
@@ -50,11 +50,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: minecraft-server-bedrock
+  name: minecraft-server-bedrock2
 spec:
   type: LoadBalancer
   selector:
-    app: minecraft-server
+    app: minecraft-server2
   ports:
       # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
     - port: 19132
